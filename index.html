@@ -326,7 +326,7 @@ select.form-input option{background:var(--dark2);color:var(--text)}
     <span style="font-size:0.72rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-top:0.9rem;text-align:center;font-weight:500">Détective Privé</span>
     <span style="font-size:1.1rem;color:var(--gold);margin-top:0.4rem;text-align:center;font-family:serif;letter-spacing:2px">محقق خاص</span>
   </div>
-  <p>Agence d'investigation privée certifiée, forte de plus de 15 ans d'expérience terrain au Canada et au Maroc. Mandats pour particuliers, entreprises et cabinets juridiques.</p>
+  <p>MDK Investigation est une agence indépendante dédiée aux enquêtes privées et aux missions de recherche. Grâce à une présence étendue et à des collaborations à l'international, nous sommes en mesure d'intervenir sur différents dossiers aussi bien au niveau local qu'à l'étranger.<br><br>Nous accompagnons particuliers et professionnels dans des problématiques variées : litiges civils, affaires familiales, enjeux commerciaux ou situations complexes nécessitant des vérifications approfondies. Notre priorité est de produire des informations fiables et des preuves exploitables, afin de vous permettre d'agir en toute connaissance de cause.<br><br>Chaque intervention est menée avec discrétion, méthode et professionnalisme. MDK Investigation s'engage à respecter strictement le secret professionnel et les cadres légaux en vigueur, garantissant ainsi la confidentialité absolue de toutes les missions confiées.</p>
   <div class="hero-btns">
     <button class="btn-primary" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Voir les services</button>
     <button class="btn-outline" onclick="document.getElementById("contact").scrollIntoView({behavior:"smooth"})">Demander un mandat</button>
@@ -761,9 +761,4 @@ function gr(t){
   if(t.match(/confident|discret|privé/))return{t:"Confidentialité absolue. Secret professionnel strict. Aucune information partagée.",w:false,m:""};
   if(t.match(/service|enquête|proposez/))return{t:"Nos services :<br>• Filature &amp; surveillance<br>• Enquêtes familiales<br>• Localisation de personnes<br>• Enquêtes corporatives<br>• Vérification d'antécédents<br>• Investigation numérique",w:false,m:""};
   if(t.match(/bonjour|salut|hello|salam/))return{t:"Bonjour ! Tout est <strong>strictement confidentiel</strong>. Comment puis-je vous aider ?",w:false,m:""};
-  if(t.match(/merci/))return{t:"Avec plaisir ! N'hésitez pas si vous avez d'autres questions.",w:false,m:""};
-  return{t:"Pour une réponse précise et confidentielle, notre équipe vous répond sous 1h.",w:true,m:b+"j'ai une question concernant vos services."};
-}
-</script>
-</body>
-</html>
+  if(t.match(/merci/))return{t
