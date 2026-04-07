@@ -912,15 +912,32 @@ function submitForm() {
   var prenom = document.getElementById("fp").value.trim();
   var email = document.getElementById("fe").value.trim();
   if (!prenom || !email) { alert("Veuillez remplir au minimum votre prénom et votre courriel."); return; }
-  var toast = document.getElementById("toast");
-  toast.classList.add("show");
-  setTimeout(function(){ toast.classList.remove("show"); }, 4000);
-  ["fp","fn","ft","fe","fs","fz","fm"].forEach(function(id){
-    var el = document.getElementById(id);
-    if (!el) return;
-    if (el.tagName === "SELECT") el.selectedIndex = 0;
-    else el.value = "";
-  });
+  
+  fetch("https://formspree.io/f/mdapwkwy", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({
+      prenom: prenom,
+      nom: document.getElementById("fn").value.trim(),
+      telephone: document.getElementById("ft").value.trim(),
+      email: email,
+      mandat: document.getElementById("fs").value,
+      zone: document.getElementById("fz").value,
+      message: document.getElementById("fm").value.trim()
+    })
+  }).then(function(resp) {
+    if (resp.ok) {
+      var toast = document.getElementById("toast");
+      toast.classList.add("show");
+      setTimeout(function(){ toast.classList.remove("show"); }, 4000);
+      ["fp","fn","ft","fe","fs","fz","fm"].forEach(function(id){
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (el.tagName === "SELECT") el.selectedIndex = 0;
+        else el.value = "";
+      });
+    } else { alert("Erreur. Contactez-nous par WhatsApp."); }
+  }).catch(function() { alert("Erreur de connexion."); });
 }
 
 // Scroll fade-in
