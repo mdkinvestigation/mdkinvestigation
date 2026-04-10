@@ -585,6 +585,253 @@ footer{padding:2.5rem 5%;border-top:1px solid var(--bord);display:flex;justify-c
 
 <div id="toast">✓ Demande envoyée — réponse sous 24h.</div>
 
+<!-- ═══════════════════════════════════════════════════════════════
+     CHATBOT MDK INVESTIGATION — Version corrigée
+     Colle ce bloc JUSTE AVANT </body> dans ton index.html
+════════════════════════════════════════════════════════════════ -->
+
+<style>
+#mdk-bubble {
+  position: fixed; bottom: 96px; right: 28px; z-index: 9998;
+  cursor: pointer; user-select: none;
+}
+#mdk-pulse-ring {
+  position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid rgba(201,168,76,.4);
+  animation: mdk-ring 2.5s ease-out infinite;
+}
+@keyframes mdk-ring {
+  0%   { transform:scale(1);    opacity:.9; }
+  70%  { transform:scale(1.35); opacity:0;  }
+  100% { transform:scale(1.35); opacity:0;  }
+}
+#mdk-btn {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: linear-gradient(145deg,#1A1A24,#111118);
+  border: 2px solid #C9A84C;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 24px rgba(201,168,76,.4), inset 0 0 12px rgba(201,168,76,.07);
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+  position: relative;
+}
+#mdk-btn:hover {
+  transform: scale(1.1) translateY(-3px);
+  box-shadow: 0 10px 36px rgba(201,168,76,.65);
+  border-color: #E8CC85;
+}
+#mdk-notif {
+  position: absolute; top: -4px; right: -4px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: linear-gradient(135deg,#e74c3c,#c0392b);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .6rem; font-weight: 800; color: #fff;
+  font-family: "DM Sans", sans-serif;
+  border: 2px solid #0A0A0F;
+  animation: mdk-notif-pop .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes mdk-notif-pop { from{transform:scale(0) rotate(-45deg);} to{transform:scale(1) rotate(0);} }
+@keyframes mdk-blink { 0%,90%,100%{transform:scaleY(1);}95%{transform:scaleY(.1);} }
+@keyframes mdk-ant   { 0%,100%{transform:translateY(0);}50%{transform:translateY(-2.5px);} }
+@keyframes mdk-ear   { 0%,100%{fill:#C9A84C;opacity:.6;}50%{fill:#E8CC85;opacity:1;} }
+@keyframes mdk-dot   { 0%,100%{opacity:1;}50%{opacity:.25;} }
+#mdk-eye-l { animation: mdk-blink 3.8s infinite; transform-origin:12.5px 15.5px; }
+#mdk-eye-r { animation: mdk-blink 3.8s .18s infinite; transform-origin:23.5px 15.5px; }
+#mdk-ant-g { animation: mdk-ant 2s ease-in-out infinite; transform-origin:18px 7px; }
+#mdk-ear-l, #mdk-ear-r { animation: mdk-ear 2.2s ease-in-out infinite; }
+
+#mdk-win {
+  position: fixed; bottom: 172px; right: 28px; z-index: 9997;
+  width: 368px; background: #08080D;
+  border: 1px solid rgba(201,168,76,.25); border-radius: 16px;
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,.8), 0 0 0 1px rgba(201,168,76,.08);
+  transform: scale(.85) translateY(32px); transform-origin: bottom right;
+  opacity: 0; pointer-events: none;
+  transition: transform .32s cubic-bezier(.34,1.56,.64,1), opacity .25s;
+  max-height: calc(100vh - 200px);
+}
+#mdk-win.mdk-open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
+
+#mdk-hdr {
+  padding: 14px 16px;
+  background: linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));
+  border-bottom: 1px solid rgba(201,168,76,.18);
+  display: flex; align-items: center; gap: 11px; flex-shrink: 0;
+}
+#mdk-hdr-av {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink:0;
+  background: linear-gradient(135deg,#C9A84C,#7A5910);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 16px rgba(201,168,76,.35);
+}
+#mdk-hdr-av svg { width:20px; height:20px; }
+.mdk-h-name { font-family:"Playfair Display",serif; font-size:.95rem; color:#E8CC85; font-weight:700; line-height:1.1; }
+.mdk-h-sub  { font-size:.68rem; color:#9B9890; display:flex; align-items:center; gap:5px; margin-top:2px; }
+.mdk-h-dot  { width:7px; height:7px; border-radius:50%; background:#25D366; animation:mdk-dot 2s infinite; flex-shrink:0; }
+.mdk-h-btns { margin-left:auto; display:flex; gap:6px; }
+.mdk-h-btn  {
+  background:none; border:1px solid rgba(201,168,76,.2); color:#9B9890;
+  border-radius:6px; padding:4px 8px; font-size:.72rem; cursor:pointer;
+  font-family:"DM Sans",sans-serif; letter-spacing:.5px; text-transform:uppercase; transition:all .2s;
+}
+.mdk-h-btn:hover { color:#C9A84C; border-color:#C9A84C; }
+#mdk-close { background:none; border:none; cursor:pointer; color:#9B9890; font-size:1.1rem; padding:4px 6px; transition:color .2s; line-height:1; }
+#mdk-close:hover { color:#C9A84C; }
+
+#mdk-msgs {
+  flex:1; overflow-y:auto; padding:16px 14px;
+  display:flex; flex-direction:column; gap:14px;
+  scroll-behavior:smooth; min-height:200px; max-height:340px;
+}
+#mdk-msgs::-webkit-scrollbar { width:3px; }
+#mdk-msgs::-webkit-scrollbar-track { background:transparent; }
+#mdk-msgs::-webkit-scrollbar-thumb { background:rgba(201,168,76,.25); border-radius:2px; }
+
+.mdk-msg { display:flex; gap:8px; max-width:92%; animation:mdk-fadeup .3s ease both; }
+@keyframes mdk-fadeup { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+.mdk-msg.bot  { align-self:flex-start; }
+.mdk-msg.user { align-self:flex-end; flex-direction:row-reverse; }
+.mdk-av {
+  width:28px; height:28px; border-radius:50%; flex-shrink:0; margin-top:2px;
+  background:linear-gradient(135deg,#C9A84C,#7A5910);
+  display:flex; align-items:center; justify-content:center;
+}
+.mdk-av svg { width:13px; height:13px; }
+.mdk-bub { padding:10px 14px; border-radius:12px; font-size:.83rem; line-height:1.65; max-width:100%; }
+.mdk-msg.bot  .mdk-bub { background:rgba(201,168,76,.07); border:1px solid rgba(201,168,76,.14); color:#E8E6E0; border-radius:2px 12px 12px 12px; }
+.mdk-msg.user .mdk-bub { background:linear-gradient(135deg,#C9A84C,#8B6914); color:#0A0A0F; font-weight:600; border-radius:12px 2px 12px 12px; }
+.mdk-bub a { color:#C9A84C; text-decoration:underline; }
+.mdk-msg.user .mdk-bub a { color:#0A0A0F; }
+.mdk-ts { font-size:.64rem; color:#555; margin-top:3px; padding:0 4px; }
+.mdk-msg.bot  .mdk-ts { text-align:left; }
+.mdk-msg.user .mdk-ts { text-align:right; }
+
+.mdk-typing { display:flex; gap:4px; align-items:center; padding:3px 0; }
+.mdk-typing span { width:6px; height:6px; border-radius:50%; background:#C9A84C; animation:mdk-t 1.1s ease-in-out infinite; }
+.mdk-typing span:nth-child(2) { animation-delay:.18s; }
+.mdk-typing span:nth-child(3) { animation-delay:.36s; }
+@keyframes mdk-t { 0%,60%,100%{transform:translateY(0);opacity:.45;}30%{transform:translateY(-6px);opacity:1;} }
+
+#mdk-qr {
+  padding:9px 12px 8px; display:flex; flex-wrap:wrap; gap:6px; flex-shrink:0;
+  border-top:1px solid rgba(255,255,255,.04); background:rgba(201,168,76,.02);
+}
+.mdk-qr {
+  background:rgba(201,168,76,.08); border:1px solid rgba(201,168,76,.2);
+  color:#C9A84C; padding:5px 11px; border-radius:20px;
+  font-size:.73rem; cursor:pointer; white-space:nowrap;
+  font-family:"DM Sans",sans-serif; letter-spacing:.3px; transition:all .2s;
+}
+.mdk-qr:hover { background:rgba(201,168,76,.2); border-color:#C9A84C; transform:translateY(-1px); }
+
+#mdk-inp-area {
+  padding:11px 12px; border-top:1px solid rgba(201,168,76,.12);
+  display:flex; gap:8px; flex-shrink:0; background:rgba(0,0,0,.25);
+}
+#mdk-inp {
+  flex:1; background:rgba(255,255,255,.05);
+  border:1px solid rgba(201,168,76,.18); border-radius:9px;
+  color:#E8E6E0; padding:9px 13px;
+  font-family:"DM Sans",sans-serif; font-size:.84rem;
+  outline:none; transition:border-color .2s;
+  resize:none; overflow:hidden; min-height:38px; max-height:100px;
+}
+#mdk-inp:focus { border-color:#C9A84C; background:rgba(255,255,255,.07); }
+#mdk-inp::placeholder { color:#555; }
+#mdk-send {
+  background:linear-gradient(135deg,#C9A84C,#8B6914);
+  border:none; width:38px; height:38px; border-radius:9px;
+  cursor:pointer; flex-shrink:0; align-self:flex-end;
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .2s, transform .15s;
+}
+#mdk-send:hover:not(:disabled) { opacity:.88; transform:translateY(-1px); }
+#mdk-send:active { transform:scale(.94); }
+#mdk-send:disabled { opacity:.35; cursor:not-allowed; }
+#mdk-send svg { width:15px; height:15px; fill:#0A0A0F; }
+
+@media(max-width:430px){
+  #mdk-win    { width:calc(100vw - 20px); right:10px; bottom:160px; }
+  #mdk-bubble { right:16px; bottom:88px; }
+  #mdk-msgs   { max-height:260px; }
+}
+</style>
+
+<!-- BUBBLE -->
+<div id="mdk-bubble" onclick="mdkToggle()" role="button" aria-label="Ouvrir l'assistant MDK Investigation">
+  <div id="mdk-pulse-ring"></div>
+  <div id="mdk-btn">
+    <div id="mdk-notif">1</div>
+    <svg viewBox="0 0 36 36" width="38" height="38" xmlns="http://www.w3.org/2000/svg">
+      <g id="mdk-ant-g">
+        <line x1="18" y1="2" x2="18" y2="7" stroke="#C9A84C" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="18" cy="1.4" r="2" fill="#C9A84C"/>
+        <circle cx="18" cy="1.4" r="1.1" fill="#E8CC85"/>
+      </g>
+      <rect id="mdk-ear-l" x="2.5" y="11" width="3.5" height="7" rx="1.75" fill="#C9A84C"/>
+      <rect id="mdk-ear-r" x="30"  y="11" width="3.5" height="7" rx="1.75" fill="#C9A84C"/>
+      <rect x="6.5" y="7" width="23" height="21" rx="5" fill="#1A1A24" stroke="#C9A84C" stroke-width="1.4"/>
+      <g id="mdk-eye-l">
+        <rect x="9" y="12" width="6" height="7.5" rx="2.2" fill="#C9A84C"/>
+        <circle cx="12" cy="15.5" r="2" fill="#08080D"/>
+        <circle cx="12.9" cy="13.9" r=".75" fill="rgba(255,255,255,.9)"/>
+      </g>
+      <g id="mdk-eye-r">
+        <rect x="21" y="12" width="6" height="7.5" rx="2.2" fill="#C9A84C"/>
+        <circle cx="24" cy="15.5" r="2" fill="#08080D"/>
+        <circle cx="24.9" cy="13.9" r=".75" fill="rgba(255,255,255,.9)"/>
+      </g>
+      <path d="M12.5 22.5 Q18 27.5 23.5 22.5" stroke="#C9A84C" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <circle cx="18" cy="20" r="1" fill="rgba(201,168,76,.45)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- CHAT WINDOW -->
+<div id="mdk-win" role="dialog" aria-modal="true" aria-label="Assistant MDK Investigation">
+  <div id="mdk-hdr">
+    <div id="mdk-hdr-av">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#0A0A0F" stroke="#E8CC85" stroke-width="1.5"/>
+        <path d="M9 12l2 2 4-4" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div style="flex:1">
+      <div class="mdk-h-name">Assistant MDK Investigation</div>
+      <div class="mdk-h-sub"><span class="mdk-h-dot"></span>Disponible — Réponse instantanée</div>
+    </div>
+    <div class="mdk-h-btns">
+      <button class="mdk-h-btn" onclick="mdkClear()">Effacer</button>
+    </div>
+    <button id="mdk-close" onclick="mdkToggle()" aria-label="Fermer">✕</button>
+  </div>
+
+  <div id="mdk-msgs" role="log" aria-live="polite"></div>
+
+  <div id="mdk-qr">
+    <button class="mdk-qr" onclick="mdkQuick('Je veux une consultation gratuite')">📋 Consultation gratuite</button>
+    <button class="mdk-qr" onclick="mdkQuick('Quels services proposez-vous ?')">🔍 Services</button>
+    <button class="mdk-qr" onclick="mdkQuick('Vous opérez dans quels pays ?')">🌍 Zones</button>
+    <button class="mdk-qr" onclick="mdkQuick('Quel est le tarif approximatif ?')">💰 Tarifs</button>
+    <button class="mdk-qr" onclick="mdkQuick('Est-ce légal ce que vous faites ?')">⚖️ Légalité</button>
+    <button class="mdk-qr" onclick="mdkQuick('Combien de temps dure une enquête ?')">⏱ Délais</button>
+  </div>
+
+  <div id="mdk-inp-area">
+    <textarea
+      id="mdk-inp"
+      placeholder="Posez votre question — tout est confidentiel…"
+      rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();mdkSend();}"
+      oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px';"
+      aria-label="Votre message"
+    ></textarea>
+    <button id="mdk-send" onclick="mdkSend()" aria-label="Envoyer">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
 <script>
 (function(){
   'use strict';
@@ -784,3 +1031,4 @@ footer{padding:2.5rem 5%;border-top:1px solid var(--bord);display:flex;justify-c
 
 })();
 </script>
+<!-- ═══ FIN CHATBOT MDK INVESTIGATION ═══ -->
