@@ -1013,40 +1013,7 @@ footer{padding:2.5rem 5%;border-top:1px solid var(--bord);display:flex;justify-c
     mdkInited = false;
     mdkInit();
   }
-function submitForm(){
-  var prenom = document.getElementById('fp').value.trim();
-  var email  = document.getElementById('fe').value.trim();
-  if(!prenom || !email){ alert('Veuillez remplir au minimum votre prénom et votre courriel.'); return; }
-  var data = {
-    _replyto   : email,
-    email      : email,
-    prenom     : prenom,
-    nom        : document.getElementById('fn').value.trim(),
-    telephone  : document.getElementById('ft').value.trim(),
-    mandat     : document.getElementById('fs').value,
-    zone       : document.getElementById('fz').value,
-    message    : document.getElementById('fm').value.trim()
-  };
-  fetch('https://formspree.io/f/mdapwkwy', {
-    method  : 'POST',
-    headers : { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body    : JSON.stringify(data)
-  })
-  .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
-  .then(function(res){
-    if(res.ok){
-      var t = document.getElementById('toast');
-      t.classList.add('show');
-      setTimeout(function(){ t.classList.remove('show'); }, 4000);
-      ['fp','fn','ft','fe','fm'].forEach(function(id){ document.getElementById(id).value = ''; });
-      document.getElementById('fs').selectedIndex = 0;
-      document.getElementById('fz').selectedIndex = 0;
-    } else {
-      alert('Erreur. Contactez-nous sur WhatsApp : +212 72 831 28 01');
-    }
-  })
-  .catch(function(){ alert('Erreur de connexion. Contactez-nous sur WhatsApp : +212 72 831 28 01'); });
-}
+
   window.mdkToggle = mdkToggle;
   window.mdkSend   = mdkSend;
   window.mdkQuick  = mdkQuick;
